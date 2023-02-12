@@ -3,12 +3,13 @@
 # Script for retrieving element data from database
 PSQL="psql --username=freecodecamp --dbname=periodic_table -t --no-align -c"
 
+# Determine if arg is atomic_number, symbol, or name based on $1
 DetermineArgType() {
 
   if [[ $1 =~ ^[0-9]+$ ]]
   then
     echo "atomic_number"
-  elif [[ $1 =~ ^[A-Za-z]$ ]]
+  elif [[ $1 =~ ^[A-Za-z]{1,2}$ ]]
   then
     echo "symbol"
   else
@@ -16,6 +17,7 @@ DetermineArgType() {
   fi
 }
 
+# Create output string based on $2 (the initial command's arg) and $1 (this arg's type)
 CreateOutput() {
   elementRecord=$($PSQL "SELECT atomic_number, symbol, name FROM elements WHERE $1='$2';")
   if [[ -z $elementRecord ]]
@@ -49,11 +51,6 @@ Main() {
 
 }
 
-
-
-# If arg is in list of names, symbols, or numbers, output formatted line of information
-
-# If arg not in list, output not found statement
 
 # Execute main()
 Main $1
